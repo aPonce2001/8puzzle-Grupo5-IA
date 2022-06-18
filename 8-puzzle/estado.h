@@ -47,7 +47,7 @@ class estado{
                  *
                  *En el (N²-1)-puzzle se tiene que numero_total_columans = FILAS, al tratarse de una matriz cuadrada.
                  *
-                 *Según como se disponga el test objetivo (Véase estado::testObjetivo()), el valor t correspondiente al número de ficha se espera tener en
+                 *Por cómo está estructurada la resolución del problema, el valor t correspondiente al número de ficha se espera tener en
                  *la posición = t del arreglo, así que con ello, se obtendrá la posición esperada, con respecto a su valor de ficha.
                  *
                  *  Ejemplo: Ficha 1 está en posición 3 del arreglo fichas[]. La posición 3 será igual a: FILA = 3 / FILAS = 3/3 = 1.
@@ -83,20 +83,9 @@ class estado{
         return inversiones%2 == 0;
     }
 
-    /*El estado será objetivo cuando tenga la disposición similar a: {0, 1, 2, ..., FILAS² - 1}
-     *Se puede observar que se busco que el valor en una determinada posición sea igual a el índice de la posición. Por ejemplo:
-     *
-     *  fichas[0] = 0, fichas[1] = 1, fichas[2] = 2, ..., fichas[FILAS²-1] = FILAS²-1
-     *
-     *Entonces, se tiene que, se comparará en cada posición si se cumple esta condición. De ser así, el test objetivo aprobará,
-     *caso contrario, reprobará.*/
+    //Se cumple que un estado es solución si su distancia Manhattan es igual a 0
     bool testObjetivo(){
-        for(int i = 0; i < FILAS * FILAS; i++){
-            if(fichas[i] != i){
-                return false;
-            }
-        }
-        return true;
+        return this->distanciaManhattan() == 0;
     }
 };
 
