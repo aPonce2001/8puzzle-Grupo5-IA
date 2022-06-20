@@ -7,7 +7,8 @@ using namespace std;
 #define FILAS 3 //Número de filas y columnas del puzzle
 
 class estado{
-    public:
+public:
+
     int fichas[FILAS*FILAS];//Representación del (N²-1)-puzzle en un arreglo de FILAS² posiciones
 
     estado(){
