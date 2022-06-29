@@ -22,7 +22,7 @@ public:
     }
 
     //Función para imprimir en una matriz una representación del (N²-1)-puzzle
-    void printEstado(){
+    void imprimirEstado(){
         for(int i = 0; i < FILAS; i++){
             for(int j = 0; j < FILAS - 1; j++){
                 cout<<fichas[(FILAS * i) + j]<<"\t";
@@ -87,6 +87,23 @@ public:
     //Se cumple que un estado es solución si su distancia Manhattan es igual a 0
     bool testObjetivo(){
         return this->distanciaManhattan() == 0;
+    }
+
+    //Función que devuelve la posición del hueco del puzzle, es decir, donde el valor sea 0.
+    int obtenerPosicionHueco(){
+        for(int i = 0; i < FILAS * FILAS; i++){
+            if(fichas[i] == 0){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    //Función que realiza los movimientos de las fichas realizando un intercambio directo
+    void intercambiarFichas(int posicionA, int posicionB){
+        int aux = fichas[posicionA];
+        fichas[posicionA] = fichas[posicionB];
+        fichas[posicionB] = aux;
     }
 };
 
