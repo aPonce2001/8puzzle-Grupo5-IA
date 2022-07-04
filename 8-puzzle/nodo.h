@@ -18,13 +18,19 @@ public:
         hijos = NULL;
         factorRamificacion = 0;
         costoRecorrido = 0;
-    }
+        profundidad=0;
+    };
 
-    //Implementaci贸n de la funci贸n sucesor
-    void funcionSucesor(){
+    nodo* autoApuntador() { //Retorna un puntero a si mismo
+        return this;
+    };
+
+
+    //Implementaci髇 de la funci髇 sucesor (Crea los hijos de un estado con los movimientos v醠idos)
+    void funcionSucesor(){           //
         int movimientosTotales = 4; //Existen 4 movimientos totales, izquierda, derecha, arriba y abajo.
         int numeroHijos = 0; //Contador de los hijos a ingresar
-        int posicionHueco = e.obtenerPosicionHueco(); //Posici贸n en forma de array del hueco del puzzle
+        int posicionHueco = e.obtenerPosicionHueco(); //Posici髇 en forma de array del hueco del puzzle
 
         //Posiciones en forma matricial del hueco del array. Sirven para comprobar que al mover la ficha, no se salga del rango filas y columnas: [0; N)
         int filaHueco = posicionHueco / FILAS;
@@ -38,7 +44,7 @@ public:
             {0, -1}//Traer la ficha de la izquierda del hueco
         };
 
-        //Se inician los hijos del nodo actual
+        //Arreglo de hijos
         hijos = new nodo*[movimientosTotales];
 
         //Para todos los movimientos actuales
@@ -47,38 +53,35 @@ public:
             if(filaHueco + acciones[i][0] < 0 || filaHueco + acciones[i][0] > FILAS - 1 || columnaHueco + acciones[i][1] < 0 || columnaHueco + acciones[i][1] > FILAS - 1){
                 continue;
             }
-
-            //Se inicia un nuevo hijo para el nodo actual con el estado que tiene el padre
             hijos[numeroHijos] = new nodo();
             hijos[numeroHijos] -> padre = this;
             hijos[numeroHijos] -> profundidad = this -> profundidad + 1;
             hijos[numeroHijos] -> costoRecorrido = this -> costoRecorrido + 1;
             hijos[numeroHijos] -> e = this -> e;
 
-            //Se halla la posici贸n unidimensional de la siguiente posici贸n para realizar el intercambio, es decir, mover la ficha al hueco.
+            //Se halla la posici髇 unidimensional de la siguiente posici髇 para realizar el intercambio, es decir, mover la ficha al hueco.
             int siguientePosicion = ((filaHueco + acciones[i][0]) * FILAS) + columnaHueco + acciones[i][1];
 
-            //Se realiza el intercambio entre la posici贸n del hueco y la ficha disponible
+            //Se realiza el intercambio entre la posici髇 del hueco y la ficha disponible
             hijos[numeroHijos] -> e.intercambiarFichas(posicionHueco, siguientePosicion);
 
-            //Se aumenta el contador de hijos
             numeroHijos++;
         }
 
-        //Se configura el factor de ramificaci贸n de acuerdo al n煤mero de hijos que se obtuvo
+        //Se configura el factor de ramificaci髇 de acuerdo al n鷐ero de hijos que se obtuvo
         this -> factorRamificacion = numeroHijos;
-    }
+    };
 
-    //Funci贸n evaluaci贸n de A estrella f(n) = g(n) + h(n)
+    //Funci髇 evaluaci髇 de A estrella f(n) = g(n) + h(n)
     int funcionEvaluacion(){
         return costoRecorrido + e.distanciaManhattan();
-    }
+    };
 
     //Imprimir el recorrido total de un nodo seleccionando sus padres
     void imprimirRecorrido(){
-        //Se almacenan los nodos en un arreglo din谩mico
+        //Se almacenan los nodos en un arreglo din醡ico
         nodo* aux = this;
-        nodo** solucion = new nodo*[22];
+        nodo** solucion = new nodo*[30];
         int i;
         for(i = 0; aux->padre != NULL; i++){
             solucion[i] = aux;
@@ -86,12 +89,117 @@ public:
         }
         solucion[i] = aux;
 
-        //Se imprime desde el 煤ltimo hasta el primer (padre == NULL)
+        //Se imprime desde el 鷏timo hasta el primer (padre == NULL)
         for(int j = i; j > -1; j--){
             solucion[j]->e.imprimirEstado();
-            cout << "Costo recorrido: " << solucion[j] -> costoRecorrido << endl << endl;
+            cout << "Costo recorrido: " << solucion[j] -> costoRecorrido<< endl;
+            cout << "Profundidad: " << solucion[j] ->profundidad << endl << endl;
+
         }
     }
+};
+
+class frontera{
+public:
+    nodo **f;
+    int nEf;
+
+    frontera(){
+        f=NULL;
+        nEf=0;
+    }
+    frontera * autoApuntadorFront(){
+        return this;
+    }
+    bool fronteraVacia(){
+        if(f==NULL){
+                //cout<<"SE VACIO LA FRONTERA"<<endl;
+            return true;
+        }else{
+            //cout<<"LA FRONTERA TODAVIA TIENE ELEMENTOS"<<endl;
+            return false;
+        }
+    };
+
+    void nuevoElemento (nodo *n){
+        nodo **aux;                 //Arreglo temporal de punteros a nodos
+        aux=new nodo* [nEf+1];      //Asigno dinamicamente nEf+1 elementos en ATPN (uno mas de lo que hay en f)
+        for(int i=0;i<nEf;i++){
+            aux[i]=f[i];            //ATPN igual a frontera APN (Arreglo de punteros a nodo)
+            f[i]=NULL;              //Una vez respaldado apunto a nulo cada puntero de frontera
+        }
+        aux[nEf]=n;                 //Ingreso el nuevo elemento al final de la frontera
+        if(nEf>0)
+            delete[] f;             //Borro el espacio de memoria del arreglo de punteros de f
+        f=NULL;                     //
+        f=aux;                      //f toma lo que se tiene en auxx
+        nEf++;                      //Aumento e numero de elementos de frontera
+    };
+
+    nodo * extraerMejorF(){
+        int menorValor=f[0]->funcionEvaluacion();
+        int aux, posMenVal=0;
+        if(nEf<1){
+            return f[0];
+        }else{
+            for(int i=1;i<nEf;i++){
+                aux = f[i]->funcionEvaluacion();
+                if(aux<menorValor){
+                    menorValor=aux;
+                    posMenVal=i;
+                }
+            }
+        }
+        return f[posMenVal];
+    };
+
+    bool eliminarElemento(nodo *n){
+        bool resultado = false;
+        nodo **aux;
+        aux= new nodo*[nEf-1];
+        int pos=-1;
+        for(int i=0;i<nEf;i++){
+            if(n==f[i]){
+                pos=i;
+                resultado=true;
+                break;
+            }
+        }
+        if(pos!=-1){
+            for(int i=0;i<pos;i++){
+                aux[i]=f[i];
+                f[i]=NULL;
+            }
+            f[pos]=NULL;
+            for(int i=pos;i<nEf-1;i++){
+                aux[i]=f[i+1];
+                f[i+1]=NULL;
+            }
+
+            delete[] f;
+            f=NULL;
+            f=aux;
+            nEf--;
+        }else{
+            for(int i=0;i<nEf-1;i++){
+                aux[i]=NULL;
+            }
+            delete[]aux;
+            aux=NULL;
+        }
+        return resultado;
+    };
+
+    bool fueVisitado(nodo *n){
+        bool resultado = false;
+        for(int i=0;i<nEf;i++){
+            if(n->e.estadoIgual(f[i]->e)){
+                return true;
+            }
+        }
+        return false;
+    };
+
 };
 
 #endif // NODO_H_INCLUDED
