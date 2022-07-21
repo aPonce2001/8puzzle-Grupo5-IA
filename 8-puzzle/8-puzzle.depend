@@ -1,15 +1,17 @@
 # depslib dependency file v1.0
-1656520787 source:/home/churukun/Documentos/IA_Projects/ProyectoIB/8puzzle-Grupo5-IA/8-puzzle/main.cpp
+1658374795 source:/home/churukun/Documentos/IA_Projects/ProyectoIB/8puzzle-Grupo5-IA/8-puzzle/main.cpp
 	<iostream>
 	"estado.h"
 	"nodo.h"
 
-1656520820 /home/churukun/Documentos/IA_Projects/ProyectoIB/8puzzle-Grupo5-IA/8-puzzle/estado.h
+1658374551 /home/churukun/Documentos/IA_Projects/ProyectoIB/8puzzle-Grupo5-IA/8-puzzle/estado.h
 	<iostream>
 	<string.h>
+	<stdlib.h>
+	<time.h>
 	<cmath>
 
-1656520820 /home/churukun/Documentos/IA_Projects/ProyectoIB/8puzzle-Grupo5-IA/8-puzzle/nodo.h
+1658374802 /home/churukun/Documentos/IA_Projects/ProyectoIB/8puzzle-Grupo5-IA/8-puzzle/nodo.h
 	<iostream>
 	"estado.h"
 

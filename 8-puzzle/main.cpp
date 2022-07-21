@@ -8,10 +8,10 @@ using namespace std;
 
 int main()
 {
-    int fichitas[FILAS * FILAS] = {7, 2, 4, 5, 0, 6, 8, 3, 1};      //Creación del estado inicial
+    //int fichitas[FILAS * FILAS] = {7, 2, 4, 5, 0, 6, 8, 3, 1};      //Creación del estado inicial
     nodo nr;                                                        //Creación del nodo raiz
     nodo *pnr = nr.autoApuntador();                                 //Puntero al nodo raiz
-    nr.e.setFichas(fichitas);                                       //Se pasa al nodo raiz el estado inicial
+    //nr.e.setFichas(fichitas);                                       //Se pasa al nodo raiz el estado inicial
     Solve_Problem(pnr);                                             //Busca una solución al problema
     return 0;
 }
@@ -26,6 +26,14 @@ void Solve_Problem(nodo *na){
 };
 
 bool ASTAR(nodo *n){
+    cout<<"Puzzle a resolver:"<<endl;
+    n -> e.imprimirEstado();
+
+    if(!n->e.tieneSolucion()){//Comprobación de si tiene solución por medio de la inversiones
+        cout<<"Número de inversiones impar."<<endl;
+        return false;
+    }
+
     //Creación de una frontera y un apuntador a la frontera
     frontera fronter;
     frontera *pfrontera=NULL;
@@ -53,6 +61,6 @@ bool ASTAR(nodo *n){
                     pfrontera->eliminarElemento(na);    //Elimina el nodo analizado de la frontera
                 }
         }while(pfrontera->fronteraVacia()==false);  //Bucle mientras existan elementos en la frontera
-        return false;
+    return false;
 };
 

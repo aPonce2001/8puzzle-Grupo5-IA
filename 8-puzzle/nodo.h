@@ -191,7 +191,6 @@ public:
     };
 
     bool fueVisitado(nodo *n){
-        bool resultado = false;
         for(int i=0;i<nEf;i++){
             if(n->e.estadoIgual(f[i]->e)){
                 return true;

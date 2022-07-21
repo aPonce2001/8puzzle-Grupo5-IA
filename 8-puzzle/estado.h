@@ -2,6 +2,8 @@
 #define ESTADO_H_INCLUDED
 #include <iostream>
 #include <string.h>
+#include <stdlib.h>
+#include <time.h>
 #include <cmath>
 using namespace std;
 #define FILAS 3 //Número de filas y columnas del puzzle
@@ -11,7 +13,21 @@ public:
 
     int fichas[FILAS*FILAS];//Representación del (N²-1)-puzzle en un arreglo de FILAS² posiciones
 
-    estado(){               //Constructor vacio
+    estado(){               //Constructor que genera estados aleatorios
+        //Estado {0, 1, 2, 3, 4, 5, 6, 7}
+        for(int i = 0; i < FILAS*FILAS; i++){
+            fichas[i] = i;
+        }
+
+        srand (time(NULL));
+
+        //Barajado para generar un estado aleatorio, se cambia posiciones de manera aleatoria
+        for(int i = 0; i < FILAS * FILAS; i++){
+            int posicionRandom = rand()%8;
+            int aux = fichas[posicionRandom];
+            fichas[posicionRandom] = fichas[i];
+            fichas[i] = aux;
+        }
     };
 
     //Función que recibe un int[] y lo coloca en fichas
